@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -44,19 +46,27 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreKeper = [];
+  List<String> questions = [
+    'You can lead a cow down stairs but not up stairs.',
+    'Approximately one quarter of human bones are in the feet.',
+    'A slug\'s blood is green.'
+  ];
+  List<bool> answers = [false, true, false];
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        const Expanded(
+        Expanded(
           flex: 5,
           child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                questions[index],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -83,7 +93,24 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                setState(() {
+                  if (answers[index] == true) {
+                    scoreKeper.add(Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ));
+                  } else {
+                    scoreKeper.add(Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ));
+                  }
+                  if (index < questions.length - 1) {
+                    index++;
+                  } else {
+                    index = 0;
+                  }
+                });
               },
             ),
           ),
@@ -105,11 +132,31 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                setState(() {
+                  if (answers[index] == false) {
+                    scoreKeper.add(Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ));
+                  } else {
+                    scoreKeper.add(Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ));
+                  }
+                  if (index < questions.length - 1) {
+                    index++;
+                  } else {
+                    index = 0;
+                  }
+                });
               },
             ),
           ),
-        ), //TODO: Add a Row here as your score keeper
+        ),
+        Row(
+          children: scoreKeper,
+        )
       ],
     );
   }
