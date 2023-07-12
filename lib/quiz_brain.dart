@@ -49,8 +49,9 @@ class QuizeBrain {
   void nextQuestion() {
     if (_currentQuestion < _questionsBank.length - 1) {
       _currentQuestion++;
-    } else {
-      _currentQuestion = 0;
     }
   }
+
+  bool isFinished() => !(_currentQuestion < _questionsBank.length - 1);
+  void reset() => _currentQuestion = 0;
 }

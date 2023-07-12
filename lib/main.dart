@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_quizzler/question.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_quizzler/quiz_brain.dart';
 
 QuizeBrain quizeBrain = QuizeBrain();
@@ -50,21 +50,47 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeper = [];
-
+  Alert? alert;
   void checkAnswer(bool userPickerAnswer) {
-    if (quizeBrain.getQuestionAnswer() == userPickerAnswer) {
-      scoreKeper.add(const Icon(
-        Icons.check,
-        color: Colors.green,
-      ));
-    } else {
-      scoreKeper.add(const Icon(
-        Icons.close,
-        color: Colors.red,
-      ));
-    }
     setState(() {
-      quizeBrain.nextQuestion();
+      if (quizeBrain.isFinished()) {
+        alert = Alert(
+          context: context,
+          type: AlertType.error,
+          title: "Finished",
+          desc: "You have reached the end of the quiz",
+          buttons: [
+            DialogButton(
+              onPressed: () {
+                setState(() {
+                  quizeBrain.reset();
+                  scoreKeper = [];
+                  alert?.dismiss();
+                });
+              },
+              width: 120,
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            )
+          ],
+        );
+        alert?.show();
+      } else {
+        if (quizeBrain.getQuestionAnswer() == userPickerAnswer) {
+          scoreKeper.add(const Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          scoreKeper.add(const Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+        }
+        quizeBrain.nextQuestion();
+      }
     });
   }
 
